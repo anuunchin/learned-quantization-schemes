@@ -56,6 +56,11 @@ class SCCEInverse:
             
             layer_weight_scales = self.weight_scales[layer_index]
             layer_bias_scales = self.bias_scales[layer_index]
+
+            # Check if the layer has scale factor values
+            if layer_weight_scales is None and layer_bias_scales is None:
+                return tf.constant(0.0, dtype=tf.float32)
+
             mean_inverse_w = tf.reduce_mean(1.0 / (tf.abs(layer_weight_scales) + eps_float32))
             mean_inverse_b = tf.reduce_mean(1.0 / (tf.abs(layer_bias_scales) + eps_float32))
 
@@ -103,6 +108,11 @@ class SCCEMinMaxBin:
             # For each layer
             layer_weight_scales = self.weight_scales[layer_index]
             layer_bias_scales = self.bias_scales[layer_index]
+
+            # Check if the layer has scale factor values
+            if layer_weight_scales is None and layer_bias_scales is None:
+                return tf.constant(0.0, dtype=tf.float32)
+            
             layer_weights = self.weights[layer_index]
             layer_biases = self.biases[layer_index]
 
@@ -170,6 +180,11 @@ class SCCEMaxBin:
 
             layer_weight_scales = self.weight_scales[layer_index]
             layer_bias_scales = self.bias_scales[layer_index]
+
+            # Check if the layer has scale factor values
+            if layer_weight_scales is None and layer_bias_scales is None:
+                return tf.constant(0.0, dtype=tf.float32)
+
             layer_weights = self.weights[layer_index]
             layer_biases = self.biases[layer_index]
 
@@ -220,6 +235,11 @@ class SCCEDifference:
            
             layer_weight_scales = self.weight_scales[layer_index]
             layer_bias_scales = self.bias_scales[layer_index]
+
+            # Check if the layer has scale factor values
+            if layer_weight_scales is None and layer_bias_scales is None:
+                return tf.constant(0.0, dtype=tf.float32)
+
             layer_weights = self.weights[layer_index]
             layer_biases = self.biases[layer_index]
 

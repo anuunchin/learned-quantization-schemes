@@ -222,3 +222,47 @@ class ColumnWiseQuantizedSTE(tf.keras.layers.Layer):
     
     def get_scale_b(self):
         return self.scale_b
+
+
+class QuantizedByAScalar(tf.keras.layers.Layer):
+    """
+    UNDER DEVELOPMENT
+    """    
+    def __init__(self, units, activation=None):
+        super(QuantizedByAScalar, self).__init__()
+        self.units = units
+        self.activation = tf.keras.activations.get(activation)
+
+    def build(self, input_shape):
+        """
+        Example shapes:
+        self.w:         (784, 128)
+        self.b:         (128, )
+        self.scale_w:   (1, 128) applied column-wise
+        self.scale_b:   (1, 1)
+        """
+        self.w = self.add_weight(shape=(input_shape[-1], self.units), initializer="random_normal", trainable=True)
+        self.b = self.add_weight(shape=(self.units,), initializer="random_normal", trainable=True)
+        self.scalar = self.add_weight(shape=(1,1), initializer=RandomNormal(mean=0.0, stddev=0.05), trainable=True)
+
+    def call(self, inputs): 
+        w_quantized_nonrounded = self.w / self.scale_w
+
+        w_quantized_rounded = tf.stop_gradient(tf.floor(w_quantized_nonrounded))
+        w_quantized_scaled_back = w_quantized_rounded * self.scale_w
+
+        b_quantized_nonrounded = self.b / self.scale_b
+
+        b_quantized_rounded = tf.stop_gradient(tf.floor(b_quantized_nonrounded))
+        b_quantized_scaled_back = b_quantized_rounded * self.scale_b
+
+        output = tf.matmul(inputs, w_quantized_scaled_back) + b_quantized_scaled_back
+        if self.activation is not None:
+            output = self.activation(output)
+        return output
+
+    def get_scale_w(self):
+        return self.scale_w
+    
+    def get_scale_b(self):
+        return self.scale_b

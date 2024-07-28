@@ -50,5 +50,7 @@ def count_unique_values(model):
             print("Unique values in quantized w: ", w_quantized_unique_values)
             print("Unique values in b: ", b_unique_values)
             print("Unique values in quantized b: ", b_quantized_unique_values)
-            
+        else:
+            print("LAYER WITH IF: ", i, "DOESN'T HAVE SCALE FACTOR VALUES OR MEANINGFUL ONES")
+
     print("\n" + "-" * 80)  # Add lines of dashes before
