@@ -80,7 +80,7 @@ class AccuracyTrackingCallBack(tf.keras.callbacks.Callback):
         plt.tight_layout()
         plt.show()
 
-
+# Something is going wrong when the penalty loss is being calculated
 class LossTrackingCallback(tf.keras.callbacks.Callback):
     """
     This callback is used to track and plot the components of the loss (total loss and custom added loss)
