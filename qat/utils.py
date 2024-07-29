@@ -54,3 +54,22 @@ def count_unique_values(model):
             print("LAYER WITH IF: ", i, "DOESN'T HAVE SCALE FACTOR VALUES OR MEANINGFUL ONES")
 
     print("\n" + "-" * 80)  # Add lines of dashes before
+
+
+def calculate_average_loss_epoch(file_path, start_line, end_line):
+    loss_values = []
+    with open(file_path, 'r') as file:
+        for i, line in enumerate(file):
+            if i + 1 < start_line:
+                continue
+            if i + 1 > end_line:
+                break
+            # Extract the loss value from the line
+            _, value = line.split(':')
+            loss_values.append(float(value.strip()))
+
+    if loss_values:
+        average_loss = sum(loss_values) / len(loss_values)
+        return average_loss
+    else:
+        return None

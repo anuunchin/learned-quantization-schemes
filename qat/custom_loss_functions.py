@@ -1,7 +1,27 @@
 import tensorflow as tf
 import numpy as np
+import contextlib
+import io
+import sys
+import logging
+
+# Set up the first logger for total loss
+total_loss_logger = tf.get_logger()
+total_loss_handler = logging.FileHandler('total_loss_log.txt', mode='a')
+total_loss_handler.setFormatter(logging.Formatter('%(message)s'))
+total_loss_logger.addHandler(total_loss_handler)
+total_loss_logger.setLevel(logging.INFO)
+
+# Set up the second logger for another type of log (e.g., accuracy)
+scale_loss_logger = tf.get_logger()
+scale_loss_handler = logging.FileHandler('scale_loss_log.txt', mode='a')
+scale_loss_handler.setFormatter(logging.Formatter('%(message)s'))
+scale_loss_logger.addHandler(scale_loss_handler)
+scale_loss_logger.setLevel(logging.INFO)
+
 
 eps_float32 = np.finfo(np.float32).eps
+
 
 class SCCE:
     def __init__(self, layers, penalty_rate):
@@ -166,6 +186,8 @@ class SCCEMaxBin:
         
         total_loss = cross_entropy_loss + scale_penalty
 
+        tf.print("Total loss:", tf.reduce_mean(total_loss), output_stream='file://total_loss_log.txt')
+
         return total_loss
 
     def compute_scale_penalty(self):
@@ -200,7 +222,11 @@ class SCCEMaxBin:
         
         scale_penalty /= len(self.weight_scales)
 
-        return scale_penalty * self.penalty_rate
+        scale_penalty *= self.penalty_rate
+
+        tf.print("Scale penalty loss:", tf.reduce_mean(scale_penalty), output_stream='file://scale_loss_log.txt')
+
+        return scale_penalty
     
     def get_name(self):
         return "SCCEMaxBin"

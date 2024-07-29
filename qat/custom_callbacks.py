@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-
+from utils import calculate_average_loss_epoch
 
 eps_float32 = np.finfo(np.float32).eps
 
@@ -89,16 +89,23 @@ class LossTrackingCallback(tf.keras.callbacks.Callback):
     """
     def __init__(self, loss_function):
         self.penalty_rate = loss_function.penalty_rate
-        self.penalty_calc_func = loss_function.compute_scale_penalty
         self.loss_function_name = loss_function.get_name()
 
         self.epoch_scc_loss = []
         self.scale_penalty_loss = []
 
     def on_epoch_end(self, epoch, logs=None):
-        scale_penalty = self.penalty_calc_func()
-        self.scale_penalty_loss.append(scale_penalty.numpy())
+        # Path to the file
+        total_loss_file = 'total_loss_log.txt'
+        scale_loss_file = 'scale_loss_log.txt'
 
+        start_line = 1  
+        end_line = (epoch + 1) * 1875
+
+        scale_loss = calculate_average_loss_epoch(scale_loss_file, start_line=start_line, end_line=end_line)
+        total_loss = calculate_average_loss_epoch(total_loss_file, start_line=start_line, end_line=end_line)
+
+        self.scale_penalty_loss.append(float(scale_loss))
         self.epoch_scc_loss.append(logs['loss'])
 
     def plot_loss(self):
@@ -119,3 +126,4 @@ class LossTrackingCallback(tf.keras.callbacks.Callback):
 
         plt.tight_layout()
         plt.show()
+        
