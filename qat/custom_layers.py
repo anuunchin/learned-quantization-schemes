@@ -1,5 +1,10 @@
 import tensorflow as tf
 from tensorflow.keras.initializers import RandomNormal
+import numpy as np
+
+eps_float32 = np.finfo(np.float32).eps
+
+
 
 """
 All of the below implementations set the scaling factor for b (self.scale_b) as a scalar. 
@@ -38,6 +43,49 @@ class DefaultDense(tf.keras.layers.Layer):
         return None
 
 
+class MinValueConstraint(tf.keras.constraints.Constraint):
+    def __init__(self, min_value):
+        self.min_value = min_value
+
+    def __call__(self, w):
+        return tf.maximum(w, self.min_value)
+
+    def get_config(self):
+        return {'min_value': self.min_value}
+
+
+# assume you can access the layer
+@tf.custom_gradient
+def custom_op(inputs, w, b, scale_w, scale_b):
+    w_quantized_nonrounded = w / scale_w
+
+    w_quantized_rounded = tf.stop_gradient(tf.floor(w_quantized_nonrounded))
+
+    w_quantized_scaled_back = w_quantized_rounded * scale_w
+
+    b_quantized_nonrounded = b / scale_b
+
+    b_quantized_rounded = tf.stop_gradient(tf.floor(b_quantized_nonrounded))
+    b_quantized_scaled_back = b_quantized_rounded * scale_b
+
+    output = tf.matmul(inputs, w_quantized_scaled_back) + b_quantized_scaled_back
+    #if activation is not None:
+    #    output = activation(output)
+
+    def custom_grad(dy):
+    #    if activation == tf.constant("relu"):
+        #grad = (inputs > 0) * dy  
+            # layer = model.get_layer(i)
+     #   elif activation == tf.constant("softmax"):
+        #grad = dy
+        grad = dy @ tf.transpose(w) #hypothetically you can hard code the gradients (for the next layer)
+        dw = tf.transpose(inputs) @ dy 
+        db = tf.reduce_sum(dy, axis=0)
+        grad_vars = [dw, db, 0.0, 0.0] # we could include the loss function here and it would just be a drag and drop layer
+        return grad, grad_vars
+    
+    return output, custom_grad
+
 class RowWiseQuantized(tf.keras.layers.Layer):
     """
     This is a custom layer that implements a dense (fully connected) layer with
@@ -46,7 +94,7 @@ class RowWiseQuantized(tf.keras.layers.Layer):
     def __init__(self, units, activation=None):
         super(RowWiseQuantized, self).__init__()
         self.units = units
-        self.activation = tf.keras.activations.get(activation)
+       # self.activation = tf.keras.activations.get(activation)
 
     def build(self, input_shape):
         """
@@ -58,13 +106,18 @@ class RowWiseQuantized(tf.keras.layers.Layer):
         """
         self.w = self.add_weight(shape=(input_shape[-1], self.units), initializer="random_normal", trainable=True)
         self.b = self.add_weight(shape=(self.units,), initializer="random_normal", trainable=True)
-        self.scale_w = self.add_weight(shape=(input_shape[-1], 1), initializer=RandomNormal(mean=0.0, stddev=0.05), trainable=True)
-        self.scale_b = self.add_weight(shape=(1,1), initializer=RandomNormal(mean=0.0, stddev=0.05), trainable=True)
+      #  self.scale_w = self.add_weight(shape=(input_shape[-1], 1), initializer=RandomNormal(mean=0.0, stddev=0.0000001), trainable=True)
+      #  self.scale_b = self.add_weight(shape=(1,1), initializer=RandomNormal(mean=0.0, stddev=0.0000001), trainable=True)
+        self.scale_b = self.add_weight(shape=(1,1), initializer=tf.keras.initializers.Constant(eps_float32*100), trainable=True, constraint = MinValueConstraint(eps_float32))
+        self.scale_w = self.add_weight(shape=(input_shape[-1], 1), initializer=tf.keras.initializers.Constant(eps_float32*100), trainable=True, constraint = MinValueConstraint(eps_float32))
 
     def call(self, inputs): 
+        """
         w_quantized_nonrounded = self.w / self.scale_w
 
         w_quantized_rounded = tf.stop_gradient(tf.floor(w_quantized_nonrounded))
+#        w_quantized_rounded = tf.floor(w_quantized_nonrounded)
+
         w_quantized_scaled_back = w_quantized_rounded * self.scale_w
 
         b_quantized_nonrounded = self.b / self.scale_b
@@ -75,7 +128,8 @@ class RowWiseQuantized(tf.keras.layers.Layer):
         output = tf.matmul(inputs, w_quantized_scaled_back) + b_quantized_scaled_back
         if self.activation is not None:
             output = self.activation(output)
-        return output
+        """
+        return custom_op(inputs, self.w, self.b, self.scale_w, self.scale_b)
 
     def get_scale_w(self):
         return self.scale_w
@@ -149,10 +203,10 @@ class ColumnWiseQuantized(tf.keras.layers.Layer):
         self.scale_w:   (1, 128) applied column-wise
         self.scale_b:   (1, 1)
         """
-        self.w = self.add_weight(shape=(input_shape[-1], self.units), initializer="random_normal", trainable=True)
-        self.b = self.add_weight(shape=(self.units,), initializer="random_normal", trainable=True)
-        self.scale_w = self.add_weight(shape=(1,self.units), initializer=RandomNormal(mean=0.0, stddev=0.00000000001), trainable=True)
-        self.scale_b = self.add_weight(shape=(1,1), initializer=RandomNormal(mean=0.0, stddev=0.00000000001), trainable=True)
+        self.w = self.add_weight(shape=(input_shape[-1], self.units), initializer=RandomNormal(mean=0.0, stddev=0.05), trainable=True)
+        self.b = self.add_weight(shape=(self.units,), initializer=RandomNormal(mean=0.0, stddev=0.05), trainable=True)
+        self.scale_w = self.add_weight(shape=(1,self.units), initializer=RandomNormal(mean=0.0, stddev=0.005), trainable=True)
+        self.scale_b = self.add_weight(shape=(1,1), initializer=RandomNormal(mean=0.0, stddev=0.005), trainable=True)
 
     def call(self, inputs): 
         w_quantized_nonrounded = self.w / self.scale_w

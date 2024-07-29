@@ -65,6 +65,8 @@ class SCCEInverse:
             mean_inverse_b = tf.reduce_mean(1.0 / (tf.abs(layer_bias_scales) + eps_float32))
 
             mean_inverse = (mean_inverse_w + mean_inverse_b) / 2
+            # The above thing isn't ding the broadcasting correctly - most likely
+            # This issue for all
 
             scale_penalty += mean_inverse
 
@@ -194,10 +196,11 @@ class SCCEMaxBin:
             bins_w = max_w_per_row + 1 # 1 accounts for 0 - assuming bits for signs(+,-) can be ignored
             bins_b = max_b + 1
 
-            average_bins = (tf.reduce_mean(bins_w) + tf.reduce_mean(bins_b)) / 2
+#            average_bins = (tf.reduce_mean(bins_w) + tf.reduce_mean(bins_b)) / 2
 
-            scale_penalty += average_bins
-        
+            scale_penalty += tf.reduce_sum(bins_w)
+            scale_penalty += tf.reduce_sum(bins_b)
+
         scale_penalty /= len(self.weight_scales)
 
         return scale_penalty * self.penalty_rate
@@ -252,7 +255,7 @@ class SCCEDifference:
             diff_w = tf.reduce_mean(tf.abs(layer_weights - w_quantized_scaled_back))
             diff_b = tf.reduce_mean(tf.abs(layer_biases - b_quantized_scaled_back))
 
-            diff = (diff_w + diff_b) / 2
+            diff = (diff_w + diff_b) / 2 # the shapes are being broadcasted wrong - most likely
 
             scale_penalty += diff
 
