@@ -1,5 +1,20 @@
 import tensorflow as tf
 import numpy as np
+import logging
+
+# Set up the first logger for total loss
+total_loss_logger = tf.get_logger()
+total_loss_handler = logging.FileHandler('logs/total_loss_log.txt', mode='a')
+total_loss_handler.setFormatter(logging.Formatter('%(message)s'))
+total_loss_logger.addHandler(total_loss_handler)
+total_loss_logger.setLevel(logging.INFO)
+
+# Set up the second logger for the scale penalty loss
+scale_loss_logger = tf.get_logger()
+scale_loss_handler = logging.FileHandler('logs/scale_loss_log.txt', mode='a')
+scale_loss_handler.setFormatter(logging.Formatter('%(message)s'))
+scale_loss_logger.addHandler(scale_loss_handler)
+scale_loss_logger.setLevel(logging.INFO)
 
 eps_float32 = np.finfo(np.float32).eps
 
@@ -158,6 +173,10 @@ class SCCEMaxBin:
         self.penalty_rate = penalty_rate
         self.application_of_scale_factors = row_wise
 
+        # Clear the contents of both log files by opening them in write mode and then closing them
+        with open('logs/total_loss_log.txt', 'w'), open('logs/scale_loss_log.txt', 'w'):
+            pass
+
     def compute_total_loss(self, y_true, y_pred):
         """
         Computes a combined loss that includes sparse categorical cross-entropy and a penalty based on the number of bins calculated from the max weights divided by the quantization factor.
@@ -168,6 +187,8 @@ class SCCEMaxBin:
         
         total_loss = cross_entropy_loss + scale_penalty
 
+        tf.print("Loss:", tf.reduce_mean(total_loss), output_stream='file://logs/total_loss_log.txt')
+
         return total_loss
 
     def compute_scale_penalty(self):
@@ -177,6 +198,8 @@ class SCCEMaxBin:
         """
 
         scale_penalty = 0
+
+        scale_num = 0
 
         for layer_index in range(len(self.weight_scales)):
 
@@ -193,17 +216,24 @@ class SCCEMaxBin:
             max_w_per_row = tf.reduce_max(tf.abs(tf.floor(layer_weights / layer_weight_scales)), axis=self.application_of_scale_factors)            
             max_b = tf.reduce_max(tf.abs(tf.floor(layer_biases / layer_bias_scales)))
 
-            bins_w = max_w_per_row + 1 # 1 accounts for 0 - assuming bits for signs(+,-) can be ignored
-            bins_b = max_b + 1
+            bins_w = max_w_per_row
+            bins_b = max_b
 
-#            average_bins = (tf.reduce_mean(bins_w) + tf.reduce_mean(bins_b)) / 2
+            dim_w = bins_w.shape[0]
+            dim_b = 1
+            scale_num += dim_b + dim_w
 
-            scale_penalty += tf.reduce_sum(bins_w)
-            scale_penalty += tf.reduce_sum(bins_b)
+            average_bins = (tf.reduce_mean(bins_w) * dim_w + tf.reduce_mean(bins_b) * dim_b) / (dim_w + dim_b)
 
-        scale_penalty /= len(self.weight_scales)
+            scale_penalty += average_bins * (dim_w + dim_b)
 
-        return scale_penalty * self.penalty_rate
+        scale_penalty /= scale_num
+
+        scale_penalty *= self.penalty_rate
+
+        tf.print("Loss:", tf.reduce_mean(scale_penalty), output_stream='file://logs/scale_loss_log.txt')
+
+        return scale_penalty
     
     def get_name(self):
         return "SCCEMaxBin"
