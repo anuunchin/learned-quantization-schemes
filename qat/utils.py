@@ -65,8 +65,9 @@ def calculate_average_loss_epoch(file_path, start_line, end_line):
             if i + 1 > end_line:
                 break
             # Extract the loss value from the line
-            _, value = line.split(':')
-            loss_values.append(float(value.strip()))
+            if line.startswith("Loss"):
+                _, value = line.split(':')
+                loss_values.append(float(value.strip()))
 
     if loss_values:
         average_loss = sum(loss_values) / len(loss_values)

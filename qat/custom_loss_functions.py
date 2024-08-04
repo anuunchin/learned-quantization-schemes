@@ -186,17 +186,19 @@ class SCCEMaxBin:
         
         total_loss = cross_entropy_loss + scale_penalty
 
-        tf.print("Total loss:", tf.reduce_mean(total_loss), output_stream='file://total_loss_log.txt')
+        tf.print("Loss:", tf.reduce_mean(total_loss), output_stream='file://total_loss_log.txt')
 
         return total_loss
 
     def compute_scale_penalty(self):
         """
         Computes the penalty based on the number of bins calculated from the max weights divided by the quantization factor.        
-        Effectively punished large number of bins.
+        Effectively punishes large number of bins.
         """
 
         scale_penalty = 0
+
+        scale_num = 0
 
         for layer_index in range(len(self.weight_scales)):
 
@@ -210,21 +212,25 @@ class SCCEMaxBin:
             layer_weights = self.weights[layer_index]
             layer_biases = self.biases[layer_index]
 
-            max_w_per_row = tf.reduce_max(tf.abs(tf.floor(layer_weights / layer_weight_scales)), axis=self.application_of_scale_factors)            
+            max_w_per_dim = tf.reduce_max(tf.abs(tf.floor(layer_weights / layer_weight_scales)), axis=self.application_of_scale_factors)            
             max_b = tf.reduce_max(tf.abs(tf.floor(layer_biases / layer_bias_scales)))
 
-            bins_w = max_w_per_row + 1 # 1 accounts for 0 - assuming bits for signs(+,-) can be ignored
-            bins_b = max_b + 1
+            bins_w = max_w_per_dim 
+            bins_b = max_b
 
-            average_bins = (tf.reduce_mean(bins_w) + tf.reduce_mean(bins_b)) / 2
+            dim_w = bins_w.shape[0]
+            dim_b = 1
+            scale_num += dim_b + dim_w
 
-            scale_penalty += average_bins
+            average_bins = (tf.reduce_mean(bins_w) * dim_w + tf.reduce_mean(bins_b) * dim_b) / (dim_w + dim_b)
+
+            scale_penalty += average_bins * (dim_w + dim_b)
         
-        scale_penalty /= len(self.weight_scales)
+        scale_penalty /= scale_num
 
         scale_penalty *= self.penalty_rate
 
-        tf.print("Scale penalty loss:", tf.reduce_mean(scale_penalty), output_stream='file://scale_loss_log.txt')
+        tf.print("Loss:", tf.reduce_mean(scale_penalty), output_stream='file://scale_loss_log.txt')
 
         return scale_penalty
     

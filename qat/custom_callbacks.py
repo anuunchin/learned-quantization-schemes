@@ -99,11 +99,14 @@ class LossTrackingCallback(tf.keras.callbacks.Callback):
         total_loss_file = 'total_loss_log.txt'
         scale_loss_file = 'scale_loss_log.txt'
 
-        start_line = 1  
-        end_line = (epoch + 1) * 1875
+        start_line = epoch * (1875 + 313) + 1
+        end_line = start_line + 1875 - 1
+
 
         scale_loss = calculate_average_loss_epoch(scale_loss_file, start_line=start_line, end_line=end_line)
         total_loss = calculate_average_loss_epoch(total_loss_file, start_line=start_line, end_line=end_line)
+        print("\n", total_loss, "Lines: ", start_line, end_line)
+
 
         self.scale_penalty_loss.append(float(scale_loss))
         self.epoch_scc_loss.append(logs['loss'])
