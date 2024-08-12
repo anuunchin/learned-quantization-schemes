@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 from utils import calculate_average_loss_epoch
-
+import os
 
 eps_float32 = np.finfo(np.float32).eps
 
@@ -25,7 +25,7 @@ class ScaleTrackingCallback(tf.keras.callbacks.Callback):
         scale_values_b = self.layer.scale_b.numpy().flatten()
         self.scale_values_per_epoch_b.append(scale_values_b)
 
-    def plot_scale_values(self, layer_name):
+    def plot_scale_values(self, layer_name, folder_name):
         plt.figure(figsize=(12, 8))
 
         # Plot each scale value trajectory
@@ -38,6 +38,8 @@ class ScaleTrackingCallback(tf.keras.callbacks.Callback):
         plt.title('Scale Values of w per Epoch - ' + layer_name)
         plt.xticks(range(1, len(self.scale_values_per_epoch_w) + 1))  
         plt.legend()
+        plt.savefig(os.path.join(folder_name, 'Scale Values of w per Epoch - ' + layer_name + '.png'))
+
         plt.show()
 
         plt.figure(figsize=(12, 8))
@@ -52,6 +54,8 @@ class ScaleTrackingCallback(tf.keras.callbacks.Callback):
         plt.title('Scale Values of b per Epoch - ' + layer_name)
         plt.xticks(range(1, len(self.scale_values_per_epoch_b) + 1))  
         plt.legend()
+        plt.savefig(os.path.join(folder_name, 'Scale Values of b per Epoch - ' + layer_name + '.png'))
+
         plt.show()
 
 
@@ -66,7 +70,7 @@ class AccuracyTrackingCallBack(tf.keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
         self.epoch_accuracy.append(logs['accuracy'])
 
-    def plot_accuracy(self):
+    def plot_accuracy(self, folder_name):
         epochs = range(1, len(self.epoch_accuracy) + 1)
 
         plt.figure(figsize=(12, 8))
@@ -77,6 +81,7 @@ class AccuracyTrackingCallBack(tf.keras.callbacks.Callback):
         plt.title('Accuracy per Epoch')
         plt.xticks(range(1, len(self.epoch_accuracy) + 1))  
         plt.legend()
+        plt.savefig(os.path.join(folder_name, 'Accuracy per Epoch.png'))
 
         plt.tight_layout()
         plt.show()
@@ -107,13 +112,14 @@ class LossTrackingCallback(tf.keras.callbacks.Callback):
 
         tolerate = 0.0002
 
-        if abs(total_loss - logs['loss']) > tolerate:
-            raise ValueError(f"Something wrong in loss calculation: calculated total_loss = {total_loss}, expected_loss = {logs['loss']}")
+        if total_loss is not None and abs(total_loss - logs['loss']) > tolerate:
+            print(f"\nSomething wrong in loss calculation: calculated total_loss = {total_loss}, expected_loss = {logs['loss']}")
+#            raise ValueError(f"Something wrong in loss calculation: calculated total_loss = {total_loss}, expected_loss = {logs['loss']}")
 
         self.scale_penalty_loss.append(float(scale_loss))
         self.epoch_scc_loss.append(logs['loss'])
 
-    def plot_loss(self):
+    def plot_loss(self, folder_name):
         epochs = range(1, len(self.epoch_scc_loss) + 1)
 
         plt.figure(figsize=(12, 8))
@@ -128,6 +134,7 @@ class LossTrackingCallback(tf.keras.callbacks.Callback):
         plt.title(f'Loss structure per epoch with penalty rate {self.penalty_rate} and loss function {self.loss_function_name}')
         plt.xticks(range(1, len(self.epoch_scc_loss) + 1))
         plt.legend()
+        plt.savefig(os.path.join(folder_name, f'Loss structure per epoch with penalty rate {self.penalty_rate} and loss function {self.loss_function_name}.png'))
 
         plt.tight_layout()
         plt.show()

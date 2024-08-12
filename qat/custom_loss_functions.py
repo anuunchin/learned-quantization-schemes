@@ -163,7 +163,7 @@ class SCCEMinMaxBin:
     def get_name(self):
         return "SCCEMinMaxBin"
 
-
+    
 class SCCEMaxBin:
     def __init__(self, layers, penalty_rate, row_wise):
         self.weight_scales = [layer.get_scale_w() for layer in layers]
@@ -175,7 +175,7 @@ class SCCEMaxBin:
 
         # Clear the contents of both log files by opening them in write mode and then closing them
         with open('logs/total_loss_log.txt', 'w'), open('logs/scale_loss_log.txt', 'w'):
-            pass
+            pass        
 
     def compute_total_loss(self, y_true, y_pred):
         """
@@ -194,7 +194,7 @@ class SCCEMaxBin:
     def compute_scale_penalty(self):
         """
         Computes the penalty based on the number of bins calculated from the max weights divided by the quantization factor.        
-        Effectively punished large number of bins.
+        Effectively punishes large number of bins.
         """
 
         scale_penalty = 0
@@ -213,8 +213,10 @@ class SCCEMaxBin:
             layer_weights = self.weights[layer_index]
             layer_biases = self.biases[layer_index]
 
-            max_w_per_row = tf.reduce_max(tf.abs(tf.floor(layer_weights / layer_weight_scales)), axis=self.application_of_scale_factors)            
-            max_b = tf.reduce_max(tf.abs(tf.floor(layer_biases / layer_bias_scales)))
+        #    max_w_per_row = tf.reduce_max(tf.abs(tf.floor(layer_weights / layer_weight_scales)), axis=self.application_of_scale_factors)            
+        #    max_b = tf.reduce_max(tf.abs(tf.floor(layer_biases / layer_bias_scales)))
+            max_w_per_row = tf.reduce_max(tf.abs(layer_weights / layer_weight_scales), axis=self.application_of_scale_factors)            
+            max_b = tf.reduce_max(tf.abs(layer_biases / layer_bias_scales))
 
             bins_w = max_w_per_row
             bins_b = max_b
@@ -223,9 +225,9 @@ class SCCEMaxBin:
             dim_b = 1
             scale_num += dim_b + dim_w
 
-            average_bins = (tf.reduce_mean(bins_w) * dim_w + tf.reduce_mean(bins_b) * dim_b) / (dim_w + dim_b)
+            average_bins = tf.reduce_mean(bins_w) * dim_w + tf.reduce_mean(bins_b) * dim_b
 
-            scale_penalty += average_bins * (dim_w + dim_b)
+            scale_penalty += average_bins
 
         scale_penalty /= scale_num
 
