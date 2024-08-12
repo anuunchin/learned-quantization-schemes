@@ -1,0 +1,26 @@
+
+--------------------------------------------------------------------------------
+NUMBER OF UNIQUE VALUES FOR W AND B OF EACH CUSTOM LAYER
+
+LAYER WITH ID: 0 DOESN'T HAVE SCALE FACTOR VALUES OR MEANINGFUL ONES
+
+LAYER WITH ID: 1 DOESN'T HAVE SCALE FACTOR VALUES OR MEANINGFUL ONES
+
+LAYER WITH ID: 2
+Unique values in w:  100289
+Unique values in quantized w:  111
+Unique values in b:  128
+Unique values in quantized b:  4 
+
+LAYER WITH ID: 3 DOESN'T HAVE SCALE FACTOR VALUES OR MEANINGFUL ONES
+
+LAYER WITH ID: 4
+Unique values in w:  1280
+Unique values in quantized w:  35
+Unique values in b:  10
+Unique values in quantized b:  7 
+
+LAYER WITH ID: 5 DOESN'T HAVE SCALE FACTOR VALUES OR MEANINGFUL ONES
+
+
+--------------------------------------------------------------------------------
