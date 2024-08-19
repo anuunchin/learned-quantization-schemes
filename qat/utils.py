@@ -94,3 +94,12 @@ def calculate_average_loss_epoch(file_path, start_line, end_line):
         return average_loss
     else:
         return None
+    
+
+
+
+
+def calculate_average_loss_batch(file_path, start_line, end_line):
+    """
+    This function will be used in the Losstracking callback, meaning it will be called on each epoch end
+    """

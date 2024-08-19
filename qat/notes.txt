@@ -1,0 +1,10 @@
+mini batches on the x axis
+you want to have validation into it 
+every k mini batch, do a full validation.
+
+video 1.57
+voice 4.04
+
+plot 
+1. loss per minibatch (minibatch on the x axis)
+2. every k minibatch full validation loss ()
