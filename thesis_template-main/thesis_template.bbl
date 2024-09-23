@@ -1,0 +1,362 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{bengio2013estimating}{article}{}
+      \name{author}{3}{}{%
+        {{hash=40a8e4774982146adc2688546f54efb2}{%
+           family={Bengio},
+           familyi={B\bibinitperiod},
+           given={Yoshua},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=db4067da5f1d8e231e32151651e87e2a}{%
+           family={Léonard},
+           familyi={L\bibinitperiod},
+           given={Nicholas},
+           giveni={N\bibinitperiod}}}%
+        {{hash=ccec1ccd2e1aa86960eb2e872c6b7020}{%
+           family={Courville},
+           familyi={C\bibinitperiod},
+           given={Aaron},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{dd42453cf8059cadadbb99021fd17990}
+      \strng{fullhash}{dd42453cf8059cadadbb99021fd17990}
+      \strng{bibnamehash}{dd42453cf8059cadadbb99021fd17990}
+      \strng{authorbibnamehash}{dd42453cf8059cadadbb99021fd17990}
+      \strng{authornamehash}{dd42453cf8059cadadbb99021fd17990}
+      \strng{authorfullhash}{dd42453cf8059cadadbb99021fd17990}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:1308.3432}
+      \field{title}{Estimating or Propagating Gradients Through Stochastic Neurons for Conditional Computation}
+      \field{year}{2013}
+    \endentry
+    \entry{fan2021training}{inproceedings}{}
+      \name{author}{7}{}{%
+        {{hash=277117db6b938bd36379979ac719cc02}{%
+           family={Fan},
+           familyi={F\bibinitperiod},
+           given={Angela},
+           giveni={A\bibinitperiod}}}%
+        {{hash=0af14ac84bf3a9d753c1ece79a50a55e}{%
+           family={Stock},
+           familyi={S\bibinitperiod},
+           given={Pierre},
+           giveni={P\bibinitperiod}}}%
+        {{hash=0ff8508086e7a2ac42be5574d8205ced}{%
+           family={Graham},
+           familyi={G\bibinitperiod},
+           given={Benjamin},
+           giveni={B\bibinitperiod}}}%
+        {{hash=ebdea2c3aa9f759075733b20dce6b873}{%
+           family={Grave},
+           familyi={G\bibinitperiod},
+           given={Edouard},
+           giveni={E\bibinitperiod}}}%
+        {{hash=3fb4e0855490e5d3ae5d8ffa6cd93fa0}{%
+           family={Gribonval},
+           familyi={G\bibinitperiod},
+           given={Rémi},
+           giveni={R\bibinitperiod}}}%
+        {{hash=a2329be98a372037fcb95334bdc0c720}{%
+           family={Jégou},
+           familyi={J\bibinitperiod},
+           given={Hervé},
+           giveni={H\bibinitperiod}}}%
+        {{hash=977d047821122d1c2e7aa855c30c8cf2}{%
+           family={Joulin},
+           familyi={J\bibinitperiod},
+           given={Armand},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Facebook AI Research, LORIA, Inria}%
+      }
+      \strng{namehash}{767b98621bcdbbf4ab796a25a3c32748}
+      \strng{fullhash}{eed0fa74dd8b0b1e30ea3d1cb71de472}
+      \strng{bibnamehash}{767b98621bcdbbf4ab796a25a3c32748}
+      \strng{authorbibnamehash}{767b98621bcdbbf4ab796a25a3c32748}
+      \strng{authornamehash}{767b98621bcdbbf4ab796a25a3c32748}
+      \strng{authorfullhash}{eed0fa74dd8b0b1e30ea3d1cb71de472}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the International Conference on Learning Representations (ICLR)}
+      \field{title}{Training with Quantization Noise for Extreme Model Compression}
+      \field{year}{2021}
+    \endentry
+    \entry{gholami2021survey}{article}{}
+      \name{author}{6}{}{%
+        {{hash=ff99b6be6f7ad0c9f311e5ddf91c01f7}{%
+           family={Gholami},
+           familyi={G\bibinitperiod},
+           given={Amir},
+           giveni={A\bibinitperiod}}}%
+        {{hash=faeabf11d1a7a5d933680f8e5a503098}{%
+           family={Kim},
+           familyi={K\bibinitperiod},
+           given={Sehoon},
+           giveni={S\bibinitperiod}}}%
+        {{hash=acc5054a5bc78dfa6ee2c7da37062cd3}{%
+           family={Dong},
+           familyi={D\bibinitperiod},
+           given={Zhen},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=e53d4d0172865556a0b0a5989a7f5c6f}{%
+           family={Yao},
+           familyi={Y\bibinitperiod},
+           given={Zhewei},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=6428c5852da0dfbdd50e39418c9571bf}{%
+           family={Mahoney},
+           familyi={M\bibinitperiod},
+           given={Michael\bibnamedelima W.},
+           giveni={M\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{hash=994177386e5a63171a7be588e97df7e5}{%
+           family={Keutzer},
+           familyi={K\bibinitperiod},
+           given={Kurt},
+           giveni={K\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {University of California, Berkeley}%
+      }
+      \strng{namehash}{413a2af5b9f6f77f60bcb0182a76654a}
+      \strng{fullhash}{cba6f990167acbdbacbad01112645912}
+      \strng{bibnamehash}{413a2af5b9f6f77f60bcb0182a76654a}
+      \strng{authorbibnamehash}{413a2af5b9f6f77f60bcb0182a76654a}
+      \strng{authornamehash}{413a2af5b9f6f77f60bcb0182a76654a}
+      \strng{authorfullhash}{cba6f990167acbdbacbad01112645912}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2103.13630}
+      \field{title}{A Survey of Quantization Methods for Efficient Neural Network Inference}
+      \field{year}{2021}
+    \endentry
+    \entry{gray1998quantization}{article}{}
+      \name{author}{2}{}{%
+        {{hash=1c25ecfe5c6205a9933cfbb5b0a38de4}{%
+           family={Gray},
+           familyi={G\bibinitperiod},
+           given={Robert\bibnamedelima M.},
+           giveni={R\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=61c4735c673fd386405765f2fea8a796}{%
+           family={Neuhoff},
+           familyi={N\bibinitperiod},
+           given={David\bibnamedelima L.},
+           giveni={D\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \strng{namehash}{2fc04bac8ff0d8abe4bb3f45d1b3f765}
+      \strng{fullhash}{2fc04bac8ff0d8abe4bb3f45d1b3f765}
+      \strng{bibnamehash}{2fc04bac8ff0d8abe4bb3f45d1b3f765}
+      \strng{authorbibnamehash}{2fc04bac8ff0d8abe4bb3f45d1b3f765}
+      \strng{authornamehash}{2fc04bac8ff0d8abe4bb3f45d1b3f765}
+      \strng{authorfullhash}{2fc04bac8ff0d8abe4bb3f45d1b3f765}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Transactions on Information Theory}
+      \field{number}{6}
+      \field{title}{Quantization}
+      \field{volume}{44}
+      \field{year}{1998}
+      \field{pages}{2325\bibrangedash 2383}
+      \range{pages}{59}
+    \endentry
+    \entry{jacob2018quantization}{inproceedings}{}
+      \name{author}{8}{}{%
+        {{hash=73f11c7544252601f7e8c5f614c660f2}{%
+           family={Jacob},
+           familyi={J\bibinitperiod},
+           given={Benoit},
+           giveni={B\bibinitperiod}}}%
+        {{hash=aa58f2ae95227046f2fbba114f0fb625}{%
+           family={Kligys},
+           familyi={K\bibinitperiod},
+           given={Skirmantas},
+           giveni={S\bibinitperiod}}}%
+        {{hash=31960f03389184b7f052f5b197cc9fdf}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Bo},
+           giveni={B\bibinitperiod}}}%
+        {{hash=d767e8e4d733bcf728bcdf2c193462f7}{%
+           family={Zhu},
+           familyi={Z\bibinitperiod},
+           given={Menglong},
+           giveni={M\bibinitperiod}}}%
+        {{hash=436cfd289182e9d6b0a46d79b8e91b6e}{%
+           family={Tang},
+           familyi={T\bibinitperiod},
+           given={Matthew},
+           giveni={M\bibinitperiod}}}%
+        {{hash=315c4166fc1f7cb66324a7f0d82827cd}{%
+           family={Howard},
+           familyi={H\bibinitperiod},
+           given={Andrew},
+           giveni={A\bibinitperiod}}}%
+        {{hash=c707ec5b5997dc408a14a34a8380166c}{%
+           family={Adam},
+           familyi={A\bibinitperiod},
+           given={Hartwig},
+           giveni={H\bibinitperiod}}}%
+        {{hash=6cbb997a11c6922af719c32863261918}{%
+           family={Kalenichenko},
+           familyi={K\bibinitperiod},
+           given={Dmitry},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{be1e8607db7344f1c8e395537c88d55a}
+      \strng{fullhash}{3ad38e526037fc692f33aef3160b0293}
+      \strng{bibnamehash}{be1e8607db7344f1c8e395537c88d55a}
+      \strng{authorbibnamehash}{be1e8607db7344f1c8e395537c88d55a}
+      \strng{authornamehash}{be1e8607db7344f1c8e395537c88d55a}
+      \strng{authorfullhash}{3ad38e526037fc692f33aef3160b0293}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition}
+      \field{title}{Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference}
+      \field{year}{2018}
+      \field{pages}{2704\bibrangedash 2713}
+      \range{pages}{10}
+    \endentry
+    \entry{jiang2021efficient}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=516cac18f154e427c66625f75630aed6}{%
+           family={Jiang},
+           familyi={J\bibinitperiod},
+           given={Chutian},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{516cac18f154e427c66625f75630aed6}
+      \strng{fullhash}{516cac18f154e427c66625f75630aed6}
+      \strng{bibnamehash}{516cac18f154e427c66625f75630aed6}
+      \strng{authorbibnamehash}{516cac18f154e427c66625f75630aed6}
+      \strng{authornamehash}{516cac18f154e427c66625f75630aed6}
+      \strng{authorfullhash}{516cac18f154e427c66625f75630aed6}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 2021 International Conference on Signal Processing and Machine Learning}
+      \field{title}{Efficient Quantization Techniques for Deep Neural Networks}
+      \field{year}{2021}
+    \endentry
+    \entry{kim2021ibert}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{hash=faeabf11d1a7a5d933680f8e5a503098}{%
+           family={Kim},
+           familyi={K\bibinitperiod},
+           given={Sehoon},
+           giveni={S\bibinitperiod}}}%
+        {{hash=ff99b6be6f7ad0c9f311e5ddf91c01f7}{%
+           family={Gholami},
+           familyi={G\bibinitperiod},
+           given={Amir},
+           giveni={A\bibinitperiod}}}%
+        {{hash=e53d4d0172865556a0b0a5989a7f5c6f}{%
+           family={Yao},
+           familyi={Y\bibinitperiod},
+           given={Zhewei},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=6428c5852da0dfbdd50e39418c9571bf}{%
+           family={Mahoney},
+           familyi={M\bibinitperiod},
+           given={Michael\bibnamedelima W.},
+           giveni={M\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{hash=994177386e5a63171a7be588e97df7e5}{%
+           family={Keutzer},
+           familyi={K\bibinitperiod},
+           given={Kurt},
+           giveni={K\bibinitperiod}}}%
+      }
+      \strng{namehash}{7513e560722cc19e18ce01bebc77637a}
+      \strng{fullhash}{dc379c9cd9fe40f2f1fd2c2820dba48f}
+      \strng{bibnamehash}{7513e560722cc19e18ce01bebc77637a}
+      \strng{authorbibnamehash}{7513e560722cc19e18ce01bebc77637a}
+      \strng{authornamehash}{7513e560722cc19e18ce01bebc77637a}
+      \strng{authorfullhash}{dc379c9cd9fe40f2f1fd2c2820dba48f}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 38th International Conference on Machine Learning}
+      \field{title}{I-BERT: Integer-only BERT Quantization}
+      \field{year}{2021}
+      \field{pages}{5506\bibrangedash 5518}
+      \range{pages}{13}
+    \endentry
+    \entry{zhuang2018towards}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{hash=7b69089c6d6117d92dd057e7e70a7607}{%
+           family={Zhuang},
+           familyi={Z\bibinitperiod},
+           given={Bohan},
+           giveni={B\bibinitperiod}}}%
+        {{hash=9e49384c78f6861746fe787b12339aed}{%
+           family={Shen},
+           familyi={S\bibinitperiod},
+           given={Chunhua},
+           giveni={C\bibinitperiod}}}%
+        {{hash=32e90a739d356bc8193f43c142aa0598}{%
+           family={Tan},
+           familyi={T\bibinitperiod},
+           given={Mingkui},
+           giveni={M\bibinitperiod}}}%
+        {{hash=f54dfc8b833af99804c92edf883f3136}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Lingqiao},
+           giveni={L\bibinitperiod}}}%
+        {{hash=8d82839be6afd59c432fc7cf084f4326}{%
+           family={Reid},
+           familyi={R\bibinitperiod},
+           given={Ian},
+           giveni={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{caeaa3a65a42cce82d6ff7b66ac7416b}
+      \strng{fullhash}{d183d89c2a79d835e4a8b7db88cfc025}
+      \strng{bibnamehash}{caeaa3a65a42cce82d6ff7b66ac7416b}
+      \strng{authorbibnamehash}{caeaa3a65a42cce82d6ff7b66ac7416b}
+      \strng{authornamehash}{caeaa3a65a42cce82d6ff7b66ac7416b}
+      \strng{authorfullhash}{d183d89c2a79d835e4a8b7db88cfc025}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}
+      \field{title}{Towards Effective Low-bitwidth Convolutional Neural Networks}
+      \field{year}{2018}
+      \field{pages}{7920\bibrangedash 7928}
+      \range{pages}{9}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

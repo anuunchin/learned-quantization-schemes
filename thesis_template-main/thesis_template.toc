@@ -1,0 +1,31 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Background}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Quantization}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Purpose \& Definition}{3}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Quantization Types}{3}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Fundamentals of Deep Learning}{4}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Dense Layers in Neural Networks}{4}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Loss Functions \& Regularization}{5}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Forward-Pass \& Back-Propagation}{6}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}Common Concepts of QAT}{7}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Low-Precision Forward-Pass}{7}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Full-Precision Back-Propagation}{7}{subsection.2.3.2}%
+\contentsline {chapter}{\numberline {3}Design}{9}{chapter.3}%
+\contentsline {chapter}{\numberline {4}Experiments}{11}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Experimental Setup}{11}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Results for Experiment A}{11}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Results for Experiment B}{11}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Discussion of Results}{12}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Related Work}{13}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Quantization Target Parameters}{13}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Granularity of Quantization}{13}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Handling of Differentiability}{13}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Precision in Quantization}{13}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Integration with Pruning \& Other Techniques}{13}{section.5.5}%
+\contentsline {section}{\numberline {5.6}Modifications to Loss Functions}{13}{section.5.6}%
+\contentsline {chapter}{\numberline {6}Conclusions}{15}{chapter.6}%
+\contentsline {chapter}{\nonumberline List of Acronyms}{17}{chapter*.7}%
+\contentsline {chapter}{\nonumberline Bibliography}{19}{chapter*.8}%
+\contentsline {chapter}{\nonumberline Appendix}{21}{chapter*.9}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
