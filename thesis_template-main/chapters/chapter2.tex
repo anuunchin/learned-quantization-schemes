@@ -1,79 +1,50 @@
 \chapter{Background\label{cha:chapter2}}
-This chapter covers the theoretical building blocks related to learned quantization, 
-a process whereby the model learns its quantization parameters during training
-instead of receiving static quantization requirements as input or undergoing discretization post training. 
-Although the primary focus of this thesis exclusively lies on learned quantization, 
-a general explanation of the term quantization and its types will be provided in the first section of this chapter
-to deliver a bigger picture of this work's relevance in the broader context. 
-The following sections will detail the specific terms and methods that are directly associated to the technical setup employed in the experiments, 
-starting from the basics of deep neural networks (NNs) and ending with their common modification techniques used in learned quantization scenarios.
-
-\section{Quantization}
-\label{sec:section1}
-This section aims to answer the \textit{why} question with respect to quantization and further provides a broader understanding of the term regarding its types.
-
-\subsection{Purpose \& Definition}
-\label{subsec:subsection1}
-With humans becoming increasingly dependent on deep learning models disguised as everyday tools — such as facial recognition filters, 
-document scanners, self-driving cars, and more — the need for these models to function in a resource- and 
-time-efficient manner is more imperative than ever. Among the many ways to meet this need, 
-quantization has become one of the most common techniques used to reduce the computational 
-and memory costs of deep NNs, given the sheer amount of parameters they possess and the inherent redundancy this introduces.
-\\
-\\
-While the term \textit{quantization} has its roots in the first half of the 20th century \cite{gray1998quantization}, in the context of NNs, 
-it has gained renewed importance  — the over-parameterization of NNs introduces a certain type of flexibility 
-that allows quantization to be implemented in many different forms \cite{gholami2021survey}.
-Despite the abundance of these forms and approaches, quantization of NNs generally refers to the process of 
-reducing the bit precision of their parameters, all while maintaining accuracy within an acceptable range.
-
-\subsection{Quantization Types}
-\label{subsec:subsection2}
-
-Although there is a multitude of ways to classify NN quantization methods, the most general classification is the division between \textit{static, dynamic}, and \textit{learned quantization}.
-    \begin{itemize}
-        \item In \textbf{static quantization}, quantization parameters are fixed before model inference, based on the data observed during training or calibration.
-        This corresponds to Post-Training Quantization (PTQ), which directly quantizes the trained floating-point model \cite{jiang2021efficient}, 
-        using various discretization approaches based on the range and distribution of the parameters being quantized, 
-        as well as the level of granularity at which the quantization values are applied.
-        
-        \item In \textbf{dynamic quantization}, the quantization parameters are calculated dynamically during inference. 
-        This typically applies to activations, as their range changes depending on the input data and, unlike that of the weights, 
-        cannot be precomputed with static quantization \cite{kim2021ibert}.
-        
-        \item In \textbf{learned quantization}, quantization parameters are learned as part of the model training process.
-        This corresponds to Quantization Aware Training (QAT) \cite{jacob2018quantization}, where quantization is integrated directly into training rather than applied afterwards.
-        Since learned quantization is central to this work, a detailed review of QAT and its applications is provided in the Related Work chapter. 
-
-    \end{itemize}
+This chapter addresses the theoretical and contextual background 
+necessary to understand the key concepts and methodologies 
+that form the foundation of the current research.
+The first section will discuss the basics of deep neural networks (NNs), 
+upon which the technical setup of this thesis is based.
+The next section aims to provide a broader context for the term \textit{quantization}, 
+followed by a final section that explains the common NN modification techniques 
+used in learned quantization scenarios.
 
 \section{Fundamentals of Deep Learning}
 \label{sec:section2}
-With the definition of quantization clarified, this section introduces the fundamental concepts of deep learning necessary for understanding it, 
-beginning with simple neural network architectures and progressing to the concepts of forward-pass and back-propagation.
+This section introduces the fundamental concepts of deep learning, 
+beginning with the most basic NN architecture and progressing to loss functions with regularization. 
+The concepts of the forward pass and backpropagation will be explained in the last subsection.
 
 \subsection{Dense Layers in Neural Networks}
 \label{subsec:subsection1}
-NNs are a mathematical abstraction of the human brain, where nodes pass signals to one another, 
-similar to how neurons in the brain communicate. These nodes take an input and generate an output, 
-much like answering a question based on given information. Any information can be represented as a set of numeric values — 
-for example, an image is a set of pixel values, each representing a specific color. Using this set of values as input, 
-a NN can generate an output, possibly identifying what's in the image.
+NNs can be considered a mathematical abstraction of the human decision-making process. 
+Consider a scenario where, given an image, you need to say aloud what you see. 
+The two eyes can be regarded as input nodes that receive the initial data, 
+the brain can be seen as the hidden layer that processes this data, 
+and your mouth — the output node that provides the final answer.
 \\
 \\
-To generate an output from the input, the classical form of NNs, called the Multilayer Perceptron (MLP), 
-processes the input through multiple layers of nodes, where each layer applies a transformation to the data. 
-These transformations are determined by the \textbf{weights} (\( W \)) and \textbf{biases} (\( b \)) 
-associated with the nodes, which are learned during training. At each layer, the operation is defined as:
+The hidden layer, which typically consists of many neurons, is where the magic
+ — or the transformation of data — happens. In its simplest form, 
+ within the classic \textit{Multilayer Perceptron} (MLP) model,
+ each hidden layer neuron performs a weighted operation:
 
 \[
-\text{output} = f(W \cdot \text{input} + b)
+\textit{output} = f(w \cdot \textit{input} + b)
 \]
 \\
-\noindent where \( f \) is an activation function applied to the weighted sum. The process repeats across layers until the final output is produced,
-such as identifying the content of an image.
-\\
-\\
+\noindent where:
+
+\begin{itemize}
+  \item \textit{input} refers to the outputs from the previous layer (or the initial data from input nodes in our case) that are fed into a specific neuron in the hidden layer.
+  \item \textit{w} (weights) is a vector of parameters associated with that specific neuron, defining the importance of each input received by this neuron. 
+  \item \textit{b} (bias) is an additional scalar parameter specific to the neuron, which shifts the result of the weighted sum, allowing for more flexibility.
+  \item \textit{f} is the \textit{activation function}, a nonlinear function applied to the weighted sum of inputs and bias in that specific neuron, allowing for more complexity.
+  \item \textit{output} is the result produced by the neuron, which will then be passed on to the next hidden layer or to the final output layer.
+\end{itemize}
+
+\noindent Hidden layers where each neuron is connected to every neuron in the previous layer 
+and every neuron in the next layer are called \textit{dense layers}.
+
 
 \begin{figure}[h!]
   \centering
@@ -109,22 +80,26 @@ such as identifying the content of an image.
           \draw[->] (H2-\i) -- (O-\j);
       
   \end{tikzpicture}
-  \caption{Multilayer Perceptron with Two Hidden Layers}
+  \caption{Multilayer Perceptron with Two Dense Hidden Layers}
   \label{fig:mlp_diagram}
 \end{figure}
 
 
-\noindent The layers in between, where this operation is applied, are called hidden layers. 
-They are typically dense layers, meaning each node in one layer is connected to every node in the next. 
-Dense layers introduce the inherent redundancy of NNs due to the large number of numeric values they contain, 
-particularly in \( W \) and \( b \). Thus, modifying the operations these layers perform 
-and the parameters they learn will be a key focus of this work.
+\noindent This interconnectedness of dense layers introduces the inherent redundancy of NNs. 
+It is particularly true in models with a large number of neurons, where the \textit{weight matrix}
+\( W \) — made up of the weight vectors \( w \) for each neuron in the layer — results 
+in a vast number of parameters, many of which have little influence on the final output.
+Thus, customizing these dense layers will be one of the key focus points in the current work.
+
 
 \subsection{Loss Functions \& Regularization}
 \label{subsec:subsection2}
+The weights and biases are usually \textit{learnable parameters}
+that the model adjusts during \textit{training}.
 The training process of NNs is similar to how our brains learn from mistakes. 
-Given the ground truth, an MLP, for example, adjusts its learnable parameters in \( W \) and \( b \)
-using a specific function that compares the ground truth with the output generated by the MLP.
+Given the ground truth, a NN adjusts its learnable parameters 
+using a specific function that compares the ground truth with the output generated by the network, 
+essentially measuring the magnitude of the network's errors.
 \\
 \\
 This function is called a \textit{loss function}, and depending on the type of question the network aims to answer, it can take many different forms.
@@ -133,8 +108,32 @@ Since the datasets used in this thesis involve multi-class classification, the \
 which measures the difference between the predicted class probabilities and the true labels for each class in the dataset.
 \\
 \\
-Often the loss function alone is not enough for the NN to perform well. This is why a regularization term that penalizes unwanted behaviours
+Often the loss function alone is not enough for a NN to perform well. This is why a \textit{regularization term} that penalizes unwanted behaviours
 is added to the loss function.
+\\
+\\
+A typical regularization term is \( L_2 \), 
+which penalizes large weights by adding the sum of the squared weights to the loss function. 
+The modified loss function is expressed as:
+
+\[
+\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda \sum_{i} w_i^2
+\]
+\\
+\noindent where:
+
+\begin{itemize}
+  \item \( \mathcal{L}_{\text{data}} \) is the original loss function (in our case, the SCCE loss function).
+  \item \( \lambda \) is a scalar parameter that controls the strength of the regularization.
+  \item \( w_i \) represents each individual weight value in the model.
+\end{itemize}
+
+\noindent The current work employs multiple custom regularization terms 
+that encourage specific behaviors in the models while discouraging others. 
+These terms will be discussed in detail in the Experimental Setup section.
+\\
+\\
+THIS PART WILL GO TO THE NEXT SECTION:
 \\
 \\
 An example approach is to define a regularization term that directly penalizes large differences between full-precision values 
@@ -193,6 +192,44 @@ The gradient of this weight with respect to the loss is calculated using the cha
 
 \noindent This shows how each weight contributes to the final error during back-propagation.
 
+\section{Quantization}
+\label{sec:section1}
+This section aims to answer the \textit{why} question with respect to quantization and further provides a broader understanding of the term regarding its types.
+
+\subsection{Purpose \& Definition}
+\label{subsec:subsection1}
+With humans becoming increasingly dependent on deep learning models disguised as everyday tools — such as facial recognition filters, 
+document scanners, self-driving cars, and more — the need for these models to function in a resource- and 
+time-efficient manner is more imperative than ever. Among the many ways to meet this need, 
+quantization has become one of the most common techniques used to reduce the computational 
+and memory costs of deep NNs, given the sheer amount of parameters they possess and the inherent redundancy this introduces.
+\\
+\\
+While the term \textit{quantization} has its roots in the first half of the 20th century \cite{gray1998quantization}, in the context of NNs, 
+it has gained renewed importance  — the over-parameterization of NNs introduces a certain type of flexibility 
+that allows quantization to be implemented in many different forms \cite{gholami2021survey}.
+Despite the abundance of these forms and approaches, quantization of NNs generally refers to the process of 
+reducing the bit precision of their parameters, all while maintaining accuracy within an acceptable range.
+
+\subsection{Quantization Types}
+\label{subsec:subsection2}
+
+Although there is a multitude of ways to classify NN quantization methods, the most general classification is the division between \textit{static, dynamic}, and \textit{learned quantization}.
+    \begin{itemize}
+        \item In \textbf{static quantization}, quantization parameters are fixed before model inference, based on the data observed during training or calibration.
+        This corresponds to Post-Training Quantization (PTQ), which directly quantizes the trained floating-point model \cite{jiang2021efficient}, 
+        using various discretization approaches based on the range and distribution of the parameters being quantized, 
+        as well as the level of granularity at which the quantization values are applied.
+        
+        \item In \textbf{dynamic quantization}, the quantization parameters are calculated dynamically during inference. 
+        This typically applies to activations, as their range changes depending on the input data and, unlike that of the weights, 
+        cannot be precomputed with static quantization \cite{kim2021ibert}.
+        
+        \item In \textbf{learned quantization}, quantization parameters are learned as part of the model training process.
+        This corresponds to Quantization Aware Training (QAT) \cite{jacob2018quantization}, where quantization is integrated directly into training rather than applied afterwards.
+        Since learned quantization is central to this work, a detailed review of QAT and its applications is provided in the Related Work chapter. 
+
+    \end{itemize}
 
 \section{Common Concepts of QAT}
 \label{sec:section2}
