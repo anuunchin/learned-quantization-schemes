@@ -39,7 +39,7 @@ The hidden layer, which typically consists of many neurons, is where the magic
   \item \textit{w} (weights) is a vector of parameters associated with that specific neuron, defining the importance of each input received by this neuron. 
   \item \textit{b} (bias) is an additional scalar parameter specific to the neuron, which shifts the result of the weighted sum, allowing for more flexibility.
   \item \textit{f} is the \textit{activation function}, a nonlinear function applied to the weighted sum of inputs and bias in that specific neuron, allowing for more complexity.
-  \item \textit{output} is the result produced by the neuron, which will then be passed on to the next hidden layer or to the final output layer.
+  \item \textit{output} is the result produced by the neuron, which will then be passed on to the next hidden layer or to the final output layer \cite{han2016deepcompression}.
 \end{itemize}
 
 \noindent Hidden layers where each neuron is connected to every neuron in the previous layer 
@@ -231,64 +231,71 @@ Although there is a multitude of ways to classify NN quantization methods, the m
 
     \end{itemize}
 
-\section{Common Concepts of QAT}
+\section{Common Approaches in QAT}
 \label{sec:section2}
 Now that the fundamentals of deep learning have been covered, 
 this section introduces concepts commonly encountered in learned quantization, 
 including the modified forward-pass technique and the challenges it creates for back-propagation.
-\subsection{Low-Precision Forward-Pass}
+
+\subsection{TODO}
 \label{subsec:subsection1}
-In QAT, the operation performed during the forward-pass is often modified. Instead of propagating the full precision values, 
-the output of a layer is first quantized and then dequantized before being passed to the next layer \cite{jacob2018quantization}. 
-This simulates the effect of quantization during inference, helping the network adjust to the reduced precision parameters.
-\\
-\\
-The \textit{quantization} process can be generalized as follows:
 
-\[
-q(x) = \text{round}\left( \frac{x}{P} \right) - Z
-\]
-\\
-\noindent where \( q(x) \) is the quantized value, \( x \) is the full precision value of the parameter that is being quantized, \( P \) is a quantization parameter, such as a scaling factor, 
-and \( Z \) represents the zero point. This method is the most commonly used \textit{uniform quantization}, which can be either \textit{asymmetric} or \textit{symmetric}, 
-depending on the value of \( Z \), with  \( Z \) = 0 representing \textit{symmetric quantization}.
-\\
-\\
-For \textit{dequantization}, we apply:
+\subsection{TODO}
+\label{subsec:subsection2}
 
-\[
-x_{\text{dequant}} = P \cdot ( q(x) + Z)
-\]
-\\
-\noindent Note that the dequantized value does not necessarily match the initial value. 
-For example, if \( x = 7.8 \) and \( P = 2 \), then quantization gives \( q(x) = 4 \), and dequantization results in \( x_{\text{dequant}} = 8 \). 
-This demonstrates how the \textit{quantization} and dequantization process approximates the original value \( x \)
-by rounding it to the nearest representable value based on the quantization parameter \( P \).
+%\subsection{Low-Precision Forward-Pass}
+%\label{subsec:subsection1}
+%In QAT, the operation performed during the forward-pass is often modified. Instead of propagating the full precision values, 
+%the output of a layer is first quantized and then dequantized before being passed to the next layer \cite{jacob2018quantization}. 
+%This simulates the effect of quantization during inference, helping the network adjust to the reduced precision parameters.
+%\\
+%\\
+%The \textit{quantization} process can be generalized as follows:
+%
+%\[
+%q(x) = \text{round}\left( \frac{x}{P} \right) - Z
+%\]
+%\\
+%\noindent where \( q(x) \) is the quantized value, \( x \) is the full precision value of the parameter that is being quantized, \( P \) is a quantization parameter, such as a scaling factor, 
+%and \( Z \) represents the zero point. This method is the most commonly used \textit{uniform quantization}, which can be either \textit{asymmetric} or \textit{symmetric}, 
+%depending on the value of \( Z \), with  \( Z \) = 0 representing \textit{symmetric quantization}.
+%\\
+%\\
+%For \textit{dequantization}, we apply:
+%
+%\[
+%x_{\text{dequant}} = P \cdot ( q(x) + Z)
+%\]
+%\\
+%\noindent Note that the dequantized value does not necessarily match the initial value. 
+%For example, if \( x = 7.8 \) and \( P = 2 \), then quantization gives \( q(x) = 4 \), and dequantization results in \( x_{\text{dequant}} = 8 \). 
+%This demonstrates how the \textit{quantization} and dequantization process approximates the original value \( x \)
+%by rounding it to the nearest representable value based on the quantization parameter \( P \).
 
-\subsection{Full-Precision Back-Propagation}
-\label{subsec:subsection1}
-In QAT, although the forward-pass operates on quantized values, back-propagation typically uses full-precision values. 
-This is because the rounding operation in the forward-pass is non-differentiable, which makes it impossible to compute gradients directly.
-\\
-\\
-Consider the example of computing the gradient of the weight \( W_{I1,H1_1} \) in Figure~\ref{fig:mlp_diagram}:
-
-\[
-\frac{\partial L}{\partial W_{I1,H1_1}} = \frac{\partial L}{\partial \text{Output 1}} \cdot \frac{\partial \text{Output 1}}{\partial H1_1} \cdot \frac{\partial H1_1}{\partial W_{I1,H1_1}}
-\]
-\\
-\noindent If the output of \( H1_1 \) was quantized using a rounding operation, the gradient 
-\[
-\frac{\partial H1_1}{\partial W_{I1,H1_1}} 
-\]
-would be undefined due to the non-differentiability of rounding. This would break the gradient flow, making it impossible to update  \( W_{I1,H1_1} \)
-during back-propagation.
-\\
-\\
-To work around this, techniques such as the Straight-Through Estimator (STE) are commonly used \cite{bengio2013estimating} \cite{fan2021training} \cite{zhuang2018towards}.
-The STE approximates the gradient by treating the rounding function as if it were differentiable during the back-propagation.
-This approach ensures that the model can simulate low-precision inference during the forward pass,
-while still benefiting from the accuracy of full-precision gradient updates during back-propagation.
-\\
-\\
-The Experimental Setup section will explain a slighly different version of the typical STE that was used in the current work.
+%\subsection{Full-Precision Back-Propagation}
+%\label{subsec:subsection1}
+%In QAT, although the forward-pass operates on quantized values, back-propagation typically uses full-precision values. 
+%This is because the rounding operation in the forward-pass is non-differentiable, which makes it impossible to compute gradients directly \cite{polino2018modelcompression}.
+%\\
+%\\
+%Consider the example of computing the gradient of the weight \( W_{I1,H1_1} \) in Figure~\ref{fig:mlp_diagram}:
+%
+%\[
+%\frac{\partial L}{\partial W_{I1,H1_1}} = \frac{\partial L}{\partial \text{Output 1}} \cdot \frac{\partial \text{Output 1}}{\partial H1_1} \cdot \frac{\partial H1_1}{\partial W_{I1,H1_1}}
+%\]
+%\\
+%\noindent If the output of \( H1_1 \) was quantized using a rounding operation, the gradient 
+%\[
+%\frac{\partial H1_1}{\partial W_{I1,H1_1}} 
+%\]
+%would be undefined due to the non-differentiability of rounding. This would break the gradient flow, making it impossible to update  \( W_{I1,H1_1} \)
+%during back-propagation.
+%\\
+%\\
+%To work around this, techniques such as the Straight-Through Estimator (STE) are commonly used \cite{bengio2013estimating} \cite{fan2021training} \cite{zhuang2018towards} \cite{krishnamoorthi2018quantizing}.
+%The STE approximates the gradient by treating the rounding function as if it were differentiable during the back-propagation.
+%This approach ensures that the model can simulate low-precision inference during the forward pass,
+%while still benefiting from the accuracy of full-precision gradient updates during back-propagation.
+%\\
+%\\
+%The Experimental Setup section will explain a slighly different version of the typical STE that was used in the current work.

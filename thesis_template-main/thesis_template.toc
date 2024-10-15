@@ -8,24 +8,19 @@
 \contentsline {section}{\numberline {2.2}Quantization}{6}{section.2.2}%
 \contentsline {subsection}{\numberline {2.2.1}Purpose \& Definition}{7}{subsection.2.2.1}%
 \contentsline {subsection}{\numberline {2.2.2}Quantization Types}{7}{subsection.2.2.2}%
-\contentsline {section}{\numberline {2.3}Common Concepts of QAT}{7}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Low-Precision Forward-Pass}{8}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Full-Precision Back-Propagation}{8}{subsection.2.3.2}%
-\contentsline {chapter}{\numberline {3}Design}{11}{chapter.3}%
-\contentsline {chapter}{\numberline {4}Experiments}{13}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Experimental Setup}{13}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Results for Experiment A}{13}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Results for Experiment B}{13}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Discussion of Results}{14}{section.4.4}%
-\contentsline {chapter}{\numberline {5}Related Work}{15}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Quantization Target Parameters}{15}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Granularity of Quantization}{15}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Handling of Differentiability}{15}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Precision in Quantization}{15}{section.5.4}%
-\contentsline {section}{\numberline {5.5}Integration with Pruning \& Other Techniques}{15}{section.5.5}%
-\contentsline {section}{\numberline {5.6}Modifications to Loss Functions}{15}{section.5.6}%
-\contentsline {chapter}{\numberline {6}Conclusions}{17}{chapter.6}%
-\contentsline {chapter}{\nonumberline List of Acronyms}{19}{chapter*.7}%
-\contentsline {chapter}{\nonumberline Bibliography}{21}{chapter*.8}%
-\contentsline {chapter}{\nonumberline Appendix}{23}{chapter*.9}%
+\contentsline {section}{\numberline {2.3}Common Approaches in QAT}{7}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}TODO}{8}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}TODO}{8}{subsection.2.3.2}%
+\contentsline {chapter}{\numberline {3}Learned Quantization}{9}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Custom Quantization Layers}{9}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Custom Loss Functions}{9}{section.3.2}%
+\contentsline {chapter}{\numberline {4}Experiments}{11}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Experimental Setup}{11}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Hyperparamter Tuning}{11}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Dataset-Specific Results}{11}{section.4.3}%
+\contentsline {chapter}{\numberline {5}Related Work}{13}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Conclusions}{15}{chapter.6}%
+\contentsline {chapter}{\nonumberline List of Acronyms}{17}{chapter*.5}%
+\contentsline {chapter}{\nonumberline Bibliography}{19}{chapter*.6}%
+\contentsline {chapter}{\nonumberline Appendix}{21}{chapter*.7}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

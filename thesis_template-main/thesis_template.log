@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.22)  30 SEP 2024 12:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.22)  15 OCT 2024 15:34
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1002,7 +1002,16 @@ LaTeX Warning: Label `sec:section2' multiply defined.
 LaTeX Warning: Label `subsec:subsection1' multiply defined.
 
 
+LaTeX Warning: Label `subsec:subsection2' multiply defined.
+
+
 LaTeX Warning: Label `subsec:subsection1' multiply defined.
+
+
+LaTeX Warning: Label `subsec:subsection2' multiply defined.
+
+
+LaTeX Warning: Label `sec:datasets' multiply defined.
 
 )
 \openout1 = `thesis_template.aux'.
@@ -1312,69 +1321,39 @@ Underfull \hbox (badness 10000) in paragraph at lines 201--213
 
  []
 
-[6]
-Underfull \hbox (badness 10000) in paragraph at lines 241--247
-
- []
-
-[7]
-Underfull \hbox (badness 10000) in paragraph at lines 250--258
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 270--275
-
- []
-
-) (./chapters/chapter3.tex
-Underfull \hbox (badness 10000) in paragraph at lines 283--1
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 283--1
-
- []
-
-[8] [9] [10
-
-]
+[6]) (./chapters/chapter3.tex [7] [8]
 chapter 3.
-) (./chapters/chapter4.tex [11] [12
+) (./chapters/chapter4.tex [9
+
+] [10
 
 ]
 chapter 4.
-<./figures/uml_seq_example.png, id=219, 376.40625pt x 248.93pt>
-File: ./figures/uml_seq_example.png Graphic file (type png)
-<use ./figures/uml_seq_example.png>
-Package pdftex.def Info: ./figures/uml_seq_example.png  used on input line 13.
-(pdftex.def)             Requested size: 256.0748pt x 169.36131pt.
+) (./chapters/chapter5.tex [11] [12
 
-Underfull \vbox (badness 1122) has occurred while \output is active []
-
- [13 <./figures/uml_seq_example.png>]) (./chapters/chapter5.tex [14]
+]
 chapter 5.
-) (./chapters/chapter6.tex [15
-
-] [16
+) (./chapters/chapter6.tex [13] [14
 
 ]
 chapter 6.
-) [17] [18
+) [15] [16
 
 
 ] (./misc/acronyms.tex
 chapter without number
-) [19
+) [17
 
-] [20
+] [18
 
 ]
 chapter without number
-(./misc/annex.tex [21] [22
 
-]
+Overfull \hbox (17.53911pt too wide) in paragraph at lines 81--81
+\T1/cmtt/m/n/10.95 proceedings . neurips . cc / paper / 2015 / hash / 3e15cc11f979ed25912dff5b0669f2cd -[]
+ []
+
+[19] (./misc/annex.tex [20]
 chapter without number
 
 Class scrbook Warning: You are using `\begin{appendix}...\end{appendix}'.
@@ -1390,7 +1369,9 @@ Class scrbook Warning: You are using `\begin{appendix}...\end{appendix}'.
 (scrbook)              and replace `\begin{appendix}' by command
 (scrbook)              `\appendix' on input line 3.
 
-) [23] (./thesis_template.aux (./misc/titlepage.aux) (./misc/self-assertion.aux) (./misc/abstract.aux) (./misc/abstract_de.aux))
+) [21
+
+] (./thesis_template.aux (./misc/titlepage.aux) (./misc/self-assertion.aux) (./misc/abstract.aux) (./misc/abstract_de.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -1406,18 +1387,18 @@ Package logreq Info: Writing requests to 'thesis_template.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 37705 strings out of 474116
- 754219 string characters out of 5743682
- 1948187 words of memory out of 5000000
- 59402 multiletter control sequences out of 15000+600000
- 574965 words of font info for 67 fonts, out of 8000000 for 9000
+ 37699 strings out of 474116
+ 754651 string characters out of 5743682
+ 1947187 words of memory out of 5000000
+ 59399 multiletter control sequences out of 15000+600000
+ 575641 words of font info for 68 fonts, out of 8000000 for 9000
  1146 hyphenation exceptions out of 8191
  108i,19n,107p,10966b,2463s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsl1095.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsx1095.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsx2074.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfti1095.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb>
-Output written on thesis_template.pdf (33 pages, 452596 bytes).
+</usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfcc1095.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsl1095.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsx1095.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsx2074.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfti1095.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb>
+Output written on thesis_template.pdf (31 pages, 448359 bytes).
 PDF statistics:
- 475 PDF objects out of 1000 (max. 8388607)
- 387 compressed objects within 4 object streams
- 81 named destinations out of 1000 (max. 500000)
- 255 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 466 PDF objects out of 1000 (max. 8388607)
+ 380 compressed objects within 4 object streams
+ 77 named destinations out of 1000 (max. 500000)
+ 210 words of extra memory for PDF output out of 10000 (max. 10000000)
 
