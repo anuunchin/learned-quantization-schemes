@@ -1,22 +1,24 @@
-import tensorflow as tf
-import numpy as np
 import logging
+
+import numpy as np
+import tensorflow as tf
 
 # Set up the first logger for total loss
 total_loss_logger = tf.get_logger()
-total_loss_handler = logging.FileHandler('logs/total_loss_log.txt', mode='a')
-total_loss_handler.setFormatter(logging.Formatter('%(message)s'))
+total_loss_handler = logging.FileHandler("logs/total_loss_log.txt", mode="a")
+total_loss_handler.setFormatter(logging.Formatter("%(message)s"))
 total_loss_logger.addHandler(total_loss_handler)
 total_loss_logger.setLevel(logging.INFO)
 
 # Set up the second logger for the scale penalty loss
 scale_loss_logger = tf.get_logger()
-scale_loss_handler = logging.FileHandler('logs/scale_loss_log.txt', mode='a')
-scale_loss_handler.setFormatter(logging.Formatter('%(message)s'))
+scale_loss_handler = logging.FileHandler("logs/scale_loss_log.txt", mode="a")
+scale_loss_handler.setFormatter(logging.Formatter("%(message)s"))
 scale_loss_logger.addHandler(scale_loss_handler)
 scale_loss_logger.setLevel(logging.INFO)
 
 eps_float32 = np.finfo(np.float32).eps
+
 
 class SCCE:
     def __init__(self, layers, penalty_rate):
@@ -25,12 +27,14 @@ class SCCE:
         self.weights = [layer.w for layer in layers]
         self.biases = [layer.b for layer in layers]
         self.penalty_rate = penalty_rate
-        
+
     def compute_total_loss(self, y_true, y_pred):
         """
         Computes the sparse categorical cross-entropy loss.
         """
-        cross_entropy_loss = tf.keras.losses.sparse_categorical_crossentropy(y_true, y_pred)
+        cross_entropy_loss = tf.keras.losses.sparse_categorical_crossentropy(
+            y_true, y_pred
+        )
         return cross_entropy_loss
 
     def compute_scale_penalty(self):
@@ -52,18 +56,24 @@ class SCCEInverse:
         self.penalty_rate = penalty_rate
 
         # Clear the contents of both log files by opening them in write mode and then closing them
-        with open('logs/total_loss_log.txt', 'w'), open('logs/scale_loss_log.txt', 'w'):
-            pass 
+        with open("logs/total_loss_log.txt", "w"), open("logs/scale_loss_log.txt", "w"):
+            pass
 
     def compute_total_loss(self, y_true, y_pred):
         """
         Computes a combined loss that includes sparse categorical cross-entropy and the inverse of the average of scaling factor values.
         """
-        cross_entropy_loss = tf.keras.losses.sparse_categorical_crossentropy(y_true, y_pred)
-        scale_penalty = self.compute_scale_penalty()        
+        cross_entropy_loss = tf.keras.losses.sparse_categorical_crossentropy(
+            y_true, y_pred
+        )
+        scale_penalty = self.compute_scale_penalty()
         total_loss = cross_entropy_loss + scale_penalty
 
-        tf.print("Loss:", tf.reduce_mean(total_loss), output_stream='file://logs/total_loss_log.txt')
+        tf.print(
+            "Loss:",
+            tf.reduce_mean(total_loss),
+            output_stream="file://logs/total_loss_log.txt",
+        )
 
         return total_loss
 
@@ -77,7 +87,7 @@ class SCCEInverse:
         scale_num = 0
 
         for layer_index in range(len(self.weight_scales)):
-            
+
             layer_weight_scales = self.weight_scales[layer_index]
             layer_bias_scales = self.bias_scales[layer_index]
 
@@ -93,7 +103,9 @@ class SCCEInverse:
             scale_num + dim_w + dim_b
 
             # layer_weight_scales has nan values for some reason, maybe something is going wrong in tf
-            mean_inverse_w = tf.reduce_mean(1.0 / layer_weight_scales) # Resulint in layer_weight_scales
+            mean_inverse_w = tf.reduce_mean(
+                1.0 / layer_weight_scales
+            )  # Resulint in layer_weight_scales
             mean_inverse_b = tf.reduce_mean(1.0 / layer_bias_scales)
 
             mean_inverse = mean_inverse_w * dim_w + mean_inverse_b * dim_b
@@ -104,10 +116,12 @@ class SCCEInverse:
 
         scale_penalty *= self.penalty_rate
 
-        tf.print("Loss:", mean_inverse_w, output_stream='file://logs/scale_loss_log.txt')
+        tf.print(
+            "Loss:", mean_inverse_w, output_stream="file://logs/scale_loss_log.txt"
+        )
 
         return scale_penalty
-    
+
     def get_name(self):
         return "SCCEInverse"
 
@@ -122,21 +136,26 @@ class SCCEMinMaxBin:
         self.application_of_scale_factors = row_wise
 
         # Clear the contents of both log files by opening them in write mode and then closing them
-        with open('logs/total_loss_log.txt', 'w'), open('logs/scale_loss_log.txt', 'w'):
-            pass        
-
+        with open("logs/total_loss_log.txt", "w"), open("logs/scale_loss_log.txt", "w"):
+            pass
 
     def compute_total_loss(self, y_true, y_pred):
         """
         Computes a combined loss that includes sparse categorical cross-entropy and a penalty based on the range of quantization bins.
         """
-        cross_entropy_loss = tf.keras.losses.sparse_categorical_crossentropy(y_true, y_pred)
-        
+        cross_entropy_loss = tf.keras.losses.sparse_categorical_crossentropy(
+            y_true, y_pred
+        )
+
         scale_penalty = self.compute_scale_penalty()
-        
+
         total_loss = cross_entropy_loss + scale_penalty
 
-        tf.print("Loss:", tf.reduce_mean(total_loss), output_stream='file://logs/total_loss_log.txt')
+        tf.print(
+            "Loss:",
+            tf.reduce_mean(total_loss),
+            output_stream="file://logs/total_loss_log.txt",
+        )
 
         return total_loss
 
@@ -157,54 +176,71 @@ class SCCEMinMaxBin:
             # Check if the layer has scale factor values
             if layer_weight_scales is None and layer_bias_scales is None:
                 return tf.constant(0.0, dtype=tf.float32)
-            
+
             layer_weights = self.weights[layer_index]
             layer_biases = self.biases[layer_index]
 
-            #max_w = tf.reduce_max(tf.abs(layer_weights), axis=self.application_of_scale_factors) 
-            #min_w = tf.reduce_min(tf.abs(layer_weights), axis=self.application_of_scale_factors) ss
-            max_w_quantized = tf.floor(tf.reduce_max(tf.abs(layer_weights / layer_weight_scales), axis=self.application_of_scale_factors))
-            min_w_quantized = tf.floor(tf.reduce_min(tf.abs(layer_weights / layer_weight_scales), axis=self.application_of_scale_factors))
+            # max_w = tf.reduce_max(tf.abs(layer_weights), axis=self.application_of_scale_factors)
+            # min_w = tf.reduce_min(tf.abs(layer_weights), axis=self.application_of_scale_factors) ss
+            max_w_quantized = tf.floor(
+                tf.reduce_max(
+                    tf.abs(layer_weights / layer_weight_scales),
+                    axis=self.application_of_scale_factors,
+                )
+            )
+            min_w_quantized = tf.floor(
+                tf.reduce_min(
+                    tf.abs(layer_weights / layer_weight_scales),
+                    axis=self.application_of_scale_factors,
+                )
+            )
 
             print("TESTING SHAPE OF W: ", layer_weights.shape)
             print("TESTING SHAPE OF max_w_quantized: ", max_w_quantized.shape)
             print("TESTING SHAPE OF layer_weight_scales: ", layer_weight_scales.shape)
 
-            #max_b = tf.reduce_max(tf.abs(layer_biases)) # scalar
-            #min_b = tf.reduce_min(tf.abs(layer_biases)) # scalar
+            # max_b = tf.reduce_max(tf.abs(layer_biases)) # scalar
+            # min_b = tf.reduce_min(tf.abs(layer_biases)) # scalar
 
-            max_b_quantized = tf.floor(tf.reduce_max(tf.abs(layer_biases / layer_bias_scales)))
-            min_b_quantized = tf.floor(tf.reduce_min(tf.abs(layer_biases / layer_bias_scales)))
+            max_b_quantized = tf.floor(
+                tf.reduce_max(tf.abs(layer_biases / layer_bias_scales))
+            )
+            min_b_quantized = tf.floor(
+                tf.reduce_min(tf.abs(layer_biases / layer_bias_scales))
+            )
 
-            #max_w_quantized = tf.floor((max_w / (tf.abs(layer_weight_scales) + eps_float32))) # 10
-            #min_w_quantized = tf.floor((min_w / (tf.abs(layer_weight_scales) + eps_float32))) # 1
-            #max_w_scaled_back = max_w_quantized * tf.abs(layer_weight_scales) # 20
-            #min_w_scaled_back = min_w_quantized * tf.abs(layer_weight_scales) # 2
+            # max_w_quantized = tf.floor((max_w / (tf.abs(layer_weight_scales) + eps_float32))) # 10
+            # min_w_quantized = tf.floor((min_w / (tf.abs(layer_weight_scales) + eps_float32))) # 1
+            # max_w_scaled_back = max_w_quantized * tf.abs(layer_weight_scales) # 20
+            # min_w_scaled_back = min_w_quantized * tf.abs(layer_weight_scales) # 2
 
             range_of_quant_w_bins = tf.divide(
-                tf.reshape(max_w_quantized - min_w_quantized, (-1, 1)), 
-                layer_weight_scales
+                tf.reshape(max_w_quantized - min_w_quantized, (-1, 1)),
+                layer_weight_scales,
             )
-            #print("TERMS:", (max_w_quantized - min_w_quantized).shape, layer_weight_scales.shape)
-            #print("RANGE:", range_of_quant_w_bins.shape)
+            # print("TERMS:", (max_w_quantized - min_w_quantized).shape, layer_weight_scales.shape)
+            # print("RANGE:", range_of_quant_w_bins.shape)
 
-            #max_b_quantized = tf.floor((max_b / (tf.abs(layer_bias_scales) + eps_float32)))
-            #min_b_quantized = tf.floor((min_b / (tf.abs(layer_bias_scales) + eps_float32)))
-            #max_b_scaled_back = max_b_quantized * tf.abs(layer_bias_scales)
-            #min_b_scaled_back = min_b_quantized * tf.abs(layer_bias_scales)
+            # max_b_quantized = tf.floor((max_b / (tf.abs(layer_bias_scales) + eps_float32)))
+            # min_b_quantized = tf.floor((min_b / (tf.abs(layer_bias_scales) + eps_float32)))
+            # max_b_scaled_back = max_b_quantized * tf.abs(layer_bias_scales)
+            # min_b_scaled_back = min_b_quantized * tf.abs(layer_bias_scales)
 
-            #range_of_quant_b_bins = (max_b_quantized - min_b_quantized) / tf.abs(layer_bias_scales) + 1
+            # range_of_quant_b_bins = (max_b_quantized - min_b_quantized) / tf.abs(layer_bias_scales) + 1
 
             range_of_quant_b_bins = tf.divide(
-                tf.reshape(max_b_quantized - min_b_quantized, (-1, 1)), 
-                layer_bias_scales
+                tf.reshape(max_b_quantized - min_b_quantized, (-1, 1)),
+                layer_bias_scales,
             )
 
             dim_w = range_of_quant_w_bins[0]
             dim_b = 1
             scale_num += dim_b + dim_w
 
-            average_range_w_bins = tf.reduce_mean(range_of_quant_w_bins) * dim_w + tf.reduce_mean(range_of_quant_b_bins) * dim_b
+            average_range_w_bins = (
+                tf.reduce_mean(range_of_quant_w_bins) * dim_w
+                + tf.reduce_mean(range_of_quant_b_bins) * dim_b
+            )
 
             scale_penalty += average_range_w_bins
 
@@ -212,14 +248,18 @@ class SCCEMinMaxBin:
 
         scale_penalty *= self.penalty_rate
 
-        tf.print("Loss:", tf.reduce_mean(scale_penalty), output_stream='file://logs/scale_loss_log.txt')
+        tf.print(
+            "Loss:",
+            tf.reduce_mean(scale_penalty),
+            output_stream="file://logs/scale_loss_log.txt",
+        )
 
         return scale_penalty
-    
+
     def get_name(self):
         return "SCCEMinMaxBin"
 
-    
+
 class SCCEMaxBin:
     def __init__(self, layers, penalty_rate, row_wise):
         self.weight_scales = [layer.get_scale_w() for layer in layers]
@@ -230,26 +270,30 @@ class SCCEMaxBin:
         self.application_of_scale_factors = row_wise
 
         # Clear the contents of both log files by opening them in write mode and then closing them
-        with open('logs/total_loss_log.txt', 'w'), open('logs/scale_loss_log.txt', 'w'):
-            pass        
+        with open("logs/total_loss_log.txt", "w"), open("logs/scale_loss_log.txt", "w"):
+            pass
 
     def compute_total_loss(self, y_true, y_pred):
         """
         Computes a combined loss that includes sparse categorical cross-entropy and a penalty based on the number of bins calculated from the max weights divided by the quantization factor.
         """
-        cross_entropy_loss = tf.keras.losses.sparse_categorical_crossentropy(y_true, y_pred)
-        
+        cross_entropy_loss = tf.keras.losses.sparse_categorical_crossentropy(
+            y_true, y_pred
+        )
+
         scale_penalty = self.compute_scale_penalty()
-        
+
         total_loss = cross_entropy_loss + scale_penalty
 
-        tf.print("Loss:", tf.reduce_mean(total_loss), output_stream='file://logs/total_loss_log.txt')
+        tf.print(
+            tf.reduce_mean(total_loss), output_stream="file://logs/total_loss_log.txt"
+        )
 
         return total_loss
 
     def compute_scale_penalty(self):
         """
-        Computes the penalty based on the number of bins calculated from the max weights divided by the quantization factor.        
+        Computes the penalty based on the number of bins calculated from the max weights divided by the quantization factor.
         Effectively punishes large number of bins.
         """
 
@@ -269,9 +313,12 @@ class SCCEMaxBin:
             layer_weights = self.weights[layer_index]
             layer_biases = self.biases[layer_index]
 
-        #    max_w_per_row = tf.reduce_max(tf.abs(tf.floor(layer_weights / layer_weight_scales)), axis=self.application_of_scale_factors)            
-        #    max_b = tf.reduce_max(tf.abs(tf.floor(layer_biases / layer_bias_scales)))
-            max_w_per_row = tf.reduce_max(tf.abs(layer_weights / layer_weight_scales), axis=self.application_of_scale_factors)            
+            #    max_w_per_row = tf.reduce_max(tf.abs(tf.floor(layer_weights / layer_weight_scales)), axis=self.application_of_scale_factors)
+            #    max_b = tf.reduce_max(tf.abs(tf.floor(layer_biases / layer_bias_scales)))
+            max_w_per_row = tf.reduce_max(
+                tf.abs(layer_weights / layer_weight_scales),
+                axis=self.application_of_scale_factors,
+            )
             max_b = tf.reduce_max(tf.abs(layer_biases / layer_bias_scales))
 
             bins_w = max_w_per_row
@@ -281,7 +328,9 @@ class SCCEMaxBin:
             dim_b = 1
             scale_num += dim_b + dim_w
 
-            average_bins = tf.reduce_mean(bins_w) * dim_w + tf.reduce_mean(bins_b) * dim_b
+            average_bins = (
+                tf.reduce_mean(bins_w) * dim_w + tf.reduce_mean(bins_b) * dim_b
+            )
 
             scale_penalty += average_bins
 
@@ -289,10 +338,13 @@ class SCCEMaxBin:
 
         scale_penalty *= self.penalty_rate
 
-        tf.print("Loss:", tf.reduce_mean(scale_penalty), output_stream='file://logs/scale_loss_log.txt')
+        tf.print(
+            tf.reduce_mean(scale_penalty),
+            output_stream="file://logs/scale_loss_log.txt",
+        )
 
         return scale_penalty
-    
+
     def get_name(self):
         return "SCCEMaxBin"
 
@@ -306,22 +358,28 @@ class SCCEDifference:
         self.penalty_rate = penalty_rate
 
         # Clear the contents of both log files by opening them in write mode and then closing them
-        with open('logs/total_loss_log.txt', 'w'), open('logs/scale_loss_log.txt', 'w'):
-            pass  
+        with open("logs/total_loss_log.txt", "w"), open("logs/scale_loss_log.txt", "w"):
+            pass
 
     def compute_total_loss(self, y_true, y_pred):
         """
         Computes a combined loss that includes sparse categorical cross-entropy and a penalty based on the difference
         between the original and quantized-scaled weights and biases.
         """
-        cross_entropy_loss = tf.keras.losses.sparse_categorical_crossentropy(y_true, y_pred)
+        cross_entropy_loss = tf.keras.losses.sparse_categorical_crossentropy(
+            y_true, y_pred
+        )
         scale_penalty = self.compute_scale_penalty()
         total_loss = cross_entropy_loss + scale_penalty
 
-        tf.print("Loss:", tf.reduce_mean(total_loss), output_stream='file://logs/total_loss_log.txt')
+        tf.print(
+            "Loss:",
+            tf.reduce_mean(total_loss),
+            output_stream="file://logs/total_loss_log.txt",
+        )
 
         return total_loss
-    
+
     def compute_scale_penalty(self):
         """
         Computes the penalty based on the difference between the original and quantized-scaled weights and biases.
@@ -332,7 +390,7 @@ class SCCEDifference:
         scale_num = 0
 
         for layer_index in range(len(self.weight_scales)):
-           
+
             layer_weight_scales = self.weight_scales[layer_index]
             layer_bias_scales = self.bias_scales[layer_index]
 
@@ -346,13 +404,12 @@ class SCCEDifference:
             def soft_round(x, beta=1.0):
                 return x - tf.sigmoid(beta * (x - tf.round(x)))
 
-
-            #w_quantized_rounded = tf.floor(layer_weights / layer_weight_scales)
+            # w_quantized_rounded = tf.floor(layer_weights / layer_weight_scales)
             w_quantized_rounded = soft_round(layer_weights / layer_weight_scales)
 
             w_quantized_scaled_back = w_quantized_rounded * layer_weight_scales
 
-            #b_quantized_rounded = tf.floor(layer_biases / layer_bias_scales)
+            # b_quantized_rounded = tf.floor(layer_biases / layer_bias_scales)
             b_quantized_rounded = soft_round(layer_biases / layer_bias_scales)
             b_quantized_scaled_back = b_quantized_rounded * layer_bias_scales
 
@@ -362,14 +419,14 @@ class SCCEDifference:
             dim_w = w_quantized_scaled_back.shape[0]
             dim_b = 1
             scale_num += dim_w + dim_b
-            
+
             # Reward larger differences between original and quantized (before scaling back)
             quant_diff_w = tf.reduce_mean(tf.abs(layer_weights - w_quantized_rounded))
             quant_diff_b = tf.reduce_mean(tf.abs(layer_biases - b_quantized_rounded))
 
             diff = diff_w * dim_w + diff_b * dim_b
 
-            quant_diff = quant_diff_w * dim_w + quant_diff_b * dim_b
+            quant_diff_w * dim_w + quant_diff_b * dim_b
 
             scale_penalty += diff
 
@@ -377,7 +434,11 @@ class SCCEDifference:
 
         scale_penalty *= self.penalty_rate
 
-        tf.print("Loss:", tf.reduce_mean(scale_penalty), output_stream='file://logs/scale_loss_log.txt')
+        tf.print(
+            "Loss:",
+            tf.reduce_mean(scale_penalty),
+            output_stream="file://logs/scale_loss_log.txt",
+        )
 
         return scale_penalty
 

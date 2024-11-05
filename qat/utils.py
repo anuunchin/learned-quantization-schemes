@@ -1,6 +1,7 @@
+import os
+
 import numpy as np
 import tensorflow as tf
-import os
 
 
 def print_model_structure(model):
@@ -16,9 +17,9 @@ def print_model_structure(model):
         print(f"\nLAYER {i}: {layer}")
         print(f"  - Input Shape: {layer.input_shape}")
         print(f"  - Output Shape: {layer.output_shape}")
-        if hasattr(layer, 'get_scale_w') and layer.get_scale_w() is not None:
+        if hasattr(layer, "get_scale_w") and layer.get_scale_w() is not None:
             print(f"  - Scale Shape of w: {layer.get_scale_w().shape}")
-        if hasattr(layer, 'get_scale_b') and layer.get_scale_b() is not None:
+        if hasattr(layer, "get_scale_b") and layer.get_scale_b() is not None:
             print(f"  - Scale Shape of b: {layer.get_scale_b().shape}")
 
     print("-" * 80)  # Add lines of dashes after
@@ -32,8 +33,8 @@ def count_unique_values(model, folder_name, filename="unique_values.txt"):
     """
     os.makedirs(folder_name, exist_ok=True)
     file_path = os.path.join(folder_name, filename)
-    
-    with open(file_path, 'w') as f:
+
+    with open(file_path, "w") as f:
         # Redirect print output to the file
         original_stdout = os.sys.stdout
         os.sys.stdout = f
@@ -42,7 +43,7 @@ def count_unique_values(model, folder_name, filename="unique_values.txt"):
         print("NUMBER OF UNIQUE VALUES FOR W AND B OF EACH CUSTOM LAYER\n")
 
         for i, layer in enumerate(model.layers):
-            if hasattr(layer, 'get_scale_w') and layer.get_scale_w() is not None:
+            if hasattr(layer, "get_scale_w") and layer.get_scale_w() is not None:
                 w = layer.w.numpy()
                 b = layer.b.numpy()
                 scale_w = layer.get_scale_w().numpy()
@@ -51,8 +52,12 @@ def count_unique_values(model, folder_name, filename="unique_values.txt"):
                 w_unique_values = len(np.unique(w))
                 b_unique_values = len(np.unique(b))
 
-                w_quantized_unique_values = len(np.unique(tf.floor(w / scale_w).numpy()))
-                b_quantized_unique_values = len(np.unique(tf.floor(b / scale_b).numpy()))
+                w_quantized_unique_values = len(
+                    np.unique(tf.floor(w / scale_w).numpy())
+                )
+                b_quantized_unique_values = len(
+                    np.unique(tf.floor(b / scale_b).numpy())
+                )
 
                 print("LAYER WITH ID:", i)
                 print("Unique values in w: ", w_unique_values)
@@ -60,7 +65,11 @@ def count_unique_values(model, folder_name, filename="unique_values.txt"):
                 print("Unique values in b: ", b_unique_values)
                 print("Unique values in quantized b: ", b_quantized_unique_values, "\n")
             else:
-                print("LAYER WITH ID:", i, "DOESN'T HAVE SCALE FACTOR VALUES OR MEANINGFUL ONES\n")
+                print(
+                    "LAYER WITH ID:",
+                    i,
+                    "DOESN'T HAVE SCALE FACTOR VALUES OR MEANINGFUL ONES\n",
+                )
 
         print("\n" + "-" * 80)  # Add lines of dashes before
 
@@ -68,35 +77,31 @@ def count_unique_values(model, folder_name, filename="unique_values.txt"):
         os.sys.stdout = original_stdout
 
     # Read the file and print its contents to the terminal
-    with open(file_path, 'r') as f:
+    with open(file_path) as f:
         file_contents = f.read()
         print(file_contents)
-        
+
 
 def calculate_average_loss_epoch(file_path, start_line, end_line):
     """
     Calculate the average loss over a specified range of lines in a log file.
     """
     loss_values = []
-    with open(file_path, 'r') as file:
+    with open(file_path) as file:
         for i, line in enumerate(file):
             if i + 1 < start_line:
                 continue
             if i + 1 > end_line:
                 break
             # Extract the loss value from the line
-            if line.startswith("Loss"):
-                _, value = line.split(':')
-                loss_values.append(float(value.strip()))
+            line = line.strip()
+            loss_values.append(float(line))
 
     if loss_values:
         average_loss = sum(loss_values) / len(loss_values)
         return average_loss
     else:
         return None
-    
-
-
 
 
 def calculate_average_loss_batch(file_path, start_line, end_line):

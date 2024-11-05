@@ -7,8 +7,8 @@ LAYER WITH ID: 0 DOESN'T HAVE SCALE FACTOR VALUES OR MEANINGFUL ONES
 LAYER WITH ID: 1 DOESN'T HAVE SCALE FACTOR VALUES OR MEANINGFUL ONES
 
 LAYER WITH ID: 2
-Unique values in w:  100319
-Unique values in quantized w:  9
+Unique values in w:  100331
+Unique values in quantized w:  4
 Unique values in b:  128
 Unique values in quantized b:  2 
 
@@ -18,7 +18,7 @@ LAYER WITH ID: 4
 Unique values in w:  1280
 Unique values in quantized w:  4
 Unique values in b:  10
-Unique values in quantized b:  6 
+Unique values in quantized b:  4 
 
 LAYER WITH ID: 5 DOESN'T HAVE SCALE FACTOR VALUES OR MEANINGFUL ONES
 
